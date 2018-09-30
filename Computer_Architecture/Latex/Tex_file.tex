@@ -1,0 +1,173 @@
+\documentclass[10pt]{article}
+\usepackage{pictex,amsmath,amsfonts,amssymb,amsthm,verbatim}
+\usepackage{fullpage}
+\usepackage{fullpage}
+\usepackage{fancyhdr}
+\usepackage{algorithm,algorithmic}
+\usepackage{multirow}
+\usepackage{gensymb}
+\usepackage{mathrsfs}
+
+\setlength{\voffset}{-0.25in}
+\setlength{\headsep}{+0.5in}
+\setlength{\parskip}{1em}
+\setlength{\parindent}{0em}
+
+\def\vu{\mathbf{u}}
+\def\vv{\mathbf{v}}
+\def\vb{\mathbf{b}}
+\def\vw{\mathbf{w}}
+\def\vs{\mathbf{s}}
+
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{mdframed}
+\usepackage[utf8]{vietnam}
+
+\newmdenv[linecolor=blue,skipabove=\topsep,skipbelow=\topsep,leftmargin=5pt,rightmargin=-5pt,innerleftmargin=5pt,innerrightmargin=5pt]{mybox}
+
+\newcommand{\quotes}[1]{``#1''}
+\usepackage{minted}
+\usepackage{graphicx,graphics}
+
+\begin{document}
+	\begin{center}
+		COMPUTER  ARCHITECTURE
+	\end{center}
+
+	\section{Chapter II: Instruction - Language of Computer:}
+	\quotes{The world in language is \textbf{Instruction}, and its vocabulary is \textbf{Instructon set}} \\
+
+	\subsection{Operation of the Computer Hardware: }
+	- Every computer has to perform arithmetic. The MIPS assembly language notation: \\
+	\begin{minted}{gas}
+	add a, b, c
+	\end{minted}
+
+	\begin{itemize}
+		\item This instruction will perform addition of b and c then put their sum in a.
+		\item This notation is rigid in that each MIPS arithmetic instruction perform only one operation and must always have exactly 3 variables.
+
+	\bigbreak
+	\begin{minted}{gas}
+	add a, b, c # The sum of b and c is placed in a:
+	add a, a, d # The sum of b, c and d is placed in a:
+	add a, a, e # The sum of b, c, d and e is placed in a:
+	\end{minted}
+	$\rightarrow{\mbox{ It take three instructions to perform instruction adds of 4 variables }}$
+
+	\bigbreak
+	\includegraphics[scale = 0.4]{hinh}
+	\bigbreak
+	\includegraphics[scale = 0.4]{hinh1} \\
+	\includegraphics[scale = 0.4]{hinh2}
+	\bigbreak
+
+		\item Each line of Assembly language can contain at most 1 instruction.
+		\item Comments always terminate at the end of the line
+	\end{itemize}
+
+	\begin{mybox}
+		\begin{center}
+			\textit{Design Priciple I:} Simplicity favors Regularity
+		\end{center}
+	\end{mybox}
+
+	\textbf{Example: } \\
+	\begin{center}
+		\begin{minted}{cpp}
+		f = (g + h) - (i + j)
+		\end{minted}
+	\end{center}
+	\textbf{Solution: } \\
+	At first the compiler would break this statement into several MIPS instructions: \\
+	\begin{minted}{gas}
+	add t0, g, h # tempory variable t0 contain g + h:
+	add t1, i, j # tempory varialbe t1 contain j + j:
+	\end{minted}
+	Then we perform the subtraction: \\
+	\begin{minted}{gas}
+	sub f, t0, t1 # get t0 - t1 equals to (g + h) - (i + j):
+	\end{minted}
+
+	\subsection{Operand of the Computer Hardware: }
+	\quotes{Unlike others high-level programming language, the operand of arithmetic instructions are restricted; they must be a limited number of special location built directly in hardware called \textit{register}}. \\
+
+	- \textit{Registers} are primitives used in hardware design that are also visable to programmer when the computer is completed. \\
+	- The size of \textit{a register} in the MIPS architecture is 32 bits. Groups of 32 bits occur so frequently that they are called \textbf{word}. \\
+	- The major difference between variable and register is the limited number of registers, typically 32 on current computer like MIPS. \\
+
+	\begin{mybox}
+		\begin{center}
+			\textit{Design Priciple II:} Smaller is faster
+		\end{center}
+	\end{mybox}
+
+	- A very large number of registers may increase the clock cycle time supply because it take electric signals longer when they make travel farther. \\
+
+	\subsection{Memory Operand: }
+	\begin{itemize}
+		\item Since arithmetic operations occur only in MIPS instructions, thus MIPS must include instructions that transfer data between memory and register. Such instructions are called \textbf{data transfer instructions}. 
+		\item To access the word in memory, the instruction must suppply the memory \textbf{memory address}. \\
+	 		\includegraphics[scale = 0.5]{hinh3.png}
+			\bigbreak
+		\item The data transfer instruction that copies data from memory to register is called \textbf{load}. The actual name for this instruction in MIPS is \textit{lw}, standing for \textit{load word}.
+		\item In MIPS, words must start at address that are multiplies of 4. This requirement is called \textbf{alignment restriction}.
+	\end{itemize}
+
+	\includegraphics[scale = 0.5]{hinh4.png}
+
+	\subsection{Constant or Immediate Operand: }
+	- To use constant as an operand we woudl have to load a constant from memory to use: \\
+	\begin{minted}{gas}
+	lw $t0, AddrConstant4($s1) # $t0 = constant 4
+	add $s3, $s3, $t0 # $s3 = $s3 + $t0 ($t0 = 4)
+	\end{minted}
+
+	- Alternative method to add constant is using \textit{add immediate} or \textit{ad}: \\
+	\begin{minted}{gas}
+	addi $s3, $s3, 4 # $s3 = s3 + 4
+	\end{minted}
+
+	\subsection{Signed and Unsigned Number: }
+	- Number of bits within a MIPS word and the placement of the the number $1011_{two}$: \\
+	\includegraphics[scale = 0.4]{hinh5.png}
+	\bigbreak
+	- The MIPS word is 32 bits long, so we can represent $2^{32}$ different 32-bit patterns. \\
+	- The way to represent the signed and unsigned number is called \textit{two's complement} representation:
+	\begin{itemize}
+		\item The leading 0s represent for \textit{positive}
+		\item THe leading 1s represent for \textit{negative}
+	\end{itemize}
+	\includegraphics[scale = 0.4]{hinh6.png} 
+	\bigbreak
+	\includegraphics[scale = 0.4]{hinh7.png}
+	\bigbreak
+
+	Ex:
+	\includegraphics[scale = 0.3]{hinh8.png}
+	\bigbreak
+
+	\textbf{Revision: Binary Addition } \\
+	\begin{tabular}{|c|c|c|c|}
+	\hline 
+	a & b & a + b & carry \\
+	\hline 
+	0 & 0 & 0 & 0 \\
+	\hline
+	0 & 1 & 1 & 0 \\
+	\hline
+	1 & 0 & 1 & 0 \\
+	\hline
+	1 & 1 & 0 & 1 \\
+	\hline
+	\end{tabular}
+
+	
+
+
+
+
+
+
+\end{document}                          
